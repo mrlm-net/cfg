@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import pkg from "./package.json";
+import { env } from "process";
 
 export default defineConfig({
   build: {
@@ -11,6 +12,9 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: {
         index: resolve(__dirname, "src/index.ts"),
+        config: resolve(__dirname, "src/config.ts"),
+        environment: resolve(__dirname, "src/environment.ts"),
+        merge: resolve(__dirname, "src/merge.ts"),
         server: resolve(__dirname, "src/index.server.ts"),
       },
       name: pkg.name,

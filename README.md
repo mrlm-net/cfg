@@ -77,6 +77,11 @@ console.log(instance.get("database.unknown", "fallback"))
 
 We have specific handlers for Node.js based environments to allow you easilly manage environment variables mapping and also filesystem based configuratons. Those function are exported as part of `@mrlm/cfg/server` package and can be used as follows.
 
+###
+
+### Deepmerge function
+
+We have created our own naive implementation of deepmerge function, you can also use this package to achieve deep merge in your other apps. 
 
 ## Contributing
 
