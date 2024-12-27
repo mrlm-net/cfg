@@ -32,7 +32,7 @@ Import the package and use it to merge configuration objects deeply.
 ```typescript
 import { Config } from '@mrlm/cfg';
 
-const default = {
+const defaultConfig = {
   database: {
     host: 'localhost',
     port: 5432,
@@ -42,7 +42,7 @@ const default = {
   },
 };
 
-const environment = {
+const environmentConfig = {
   database: {
     host: 'production-db.example.com',
   },
@@ -51,7 +51,7 @@ const environment = {
   },
 };
 
-const instance = new Config(default, environment);
+const instance = new Config(defaultConfig, environmentConfig);
 
 console.log(instance);
 // Config instance:
@@ -68,20 +68,73 @@ console.log(instance);
 // }
 
 // GET value without fallback
-console.log(instance.get("database.host"))
+console.log(instance.get("database.host")); 
+// Output: 'production-db.example.com'
 // GET value with fallback
-console.log(instance.get("database.unknown", "fallback"))
+console.log(instance.get("database.unknown", "fallback")); 
+// Output: 'fallback'
 ```
 
 ## Advanced Usage
 
-We have specific handlers for Node.js based environments to allow you easilly manage environment variables mapping and also filesystem based configuratons. Those function are exported as part of `@mrlm/cfg/server` package and can be used as follows.
-
-###
+We have specific handlers for Node.js based environments to allow you easily manage environment variables mapping and also filesystem based configurations. Those functions are exported as part of `@mrlm/cfg/server` package and can be used as follows. Also all components are exported as separated subpackage to allow you to not polute application bundle with uneccessary code. 
 
 ### Deepmerge function
 
-We have created our own naive implementation of deepmerge function, you can also use this package to achieve deep merge in your other apps. 
+We have created our own naive implementation of deepmerge function, you can also use this package to achieve deep merge in your other apps.
+
+```typescript
+import { deepmerge } from '@mrlm/cfg';
+
+const obj1 = { a: 1, b: { c: 2 } };
+const obj2 = { b: { d: 3 } };
+
+const merged = deepmerge(obj1, obj2);
+console.log(merged); // Output: { a: 1, b: { c: 2, d: 3 } }
+```
+
+### Environment function
+
+You can map environment variables to your configuration using the `environment` function.
+
+```typescript
+import { environment } from '@mrlm/cfg/server';
+
+const envConfig = environment({
+  database: {
+    host: 'DB_HOST',
+    port: 'DB_PORT',
+  },
+  server: {
+    port: 'SERVER_PORT',
+  },
+});
+
+console.log(envConfig);
+// Output will depend on your environment variables, e.g.:
+// {
+//   database: {
+//     host: 'env-db-host',
+//     port: 'env-db-port',
+//   },
+//   server: {
+//     port: 'env-server-port',
+//   },
+// }
+```
+
+### LoadFiles function
+
+You can load configuration from files using the `loadFiles` function.
+
+```typescript
+import { loadFiles } from '@mrlm/cfg/server';
+
+const fileConfig = loadFiles(['./config/default.json', './config/production.json']);
+
+console.log(fileConfig);
+// Output will depend on the contents of your configuration files.
+```
 
 ## Contributing
 
