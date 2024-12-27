@@ -15,7 +15,7 @@ Typescript hierarchical configuration package, it's doing nothing more than work
 - [Usage](#usage)
 - [Advanced Usage](#advanced-usage)
 - [Interfaces](#interfaces)
-- [Contributing](#contributing)
+- [Exports](#export-paths)
 
 ## Installation
 
@@ -77,14 +77,14 @@ console.log(instance.get("database.unknown", "fallback"));
 
 ## Advanced Usage
 
-We have specific handlers for Node.js based environments to allow you easily manage environment variables mapping and also filesystem based configurations. Those functions are exported as part of `@mrlm/cfg/server` package and can be used as follows. Also all components are exported as separated subpackage to allow you to not polute application bundle with uneccessary code. 
+We have specific handlers for Node.js based environments to allow you easily manage environment variables mapping and also filesystem based configurations. Those functions are exported as part of `@mrlm/cfg/server` package and can be used as follows. Also all components are exported as separated subpackage to allow you to not pollute application bundle with unnecessary code.
 
 ### Deepmerge function
 
 We have created our own naive implementation of deepmerge function, you can also use this package to achieve deep merge in your other apps.
 
 ```typescript
-import { deepmerge } from '@mrlm/cfg';
+import { deepmerge } from '@mrlm/cfg/deepmerge';
 
 const obj1 = { a: 1, b: { c: 2 } };
 const obj2 = { b: { d: 3 } };
@@ -98,7 +98,7 @@ console.log(merged); // Output: { a: 1, b: { c: 2, d: 3 } }
 You can map environment variables to your configuration using the `environment` function.
 
 ```typescript
-import { environment } from '@mrlm/cfg/server';
+import { environment } from '@mrlm/cfg/environment';
 
 const envConfig = environment({
   database: {
@@ -128,13 +128,23 @@ console.log(envConfig);
 You can load configuration from files using the `loadFiles` function.
 
 ```typescript
-import { loadFiles } from '@mrlm/cfg/server';
+import { loadFiles } from '@mrlm/cfg/file';
 
 const fileConfig = loadFiles(['./config/default.json', './config/production.json']);
 
 console.log(fileConfig);
 // Output will depend on the contents of your configuration files.
 ```
+
+### Export Paths
+
+The following export paths are available based on the `package.json`:
+
+- `@mrlm/cfg` for the main package
+- `@mrlm/cfg/environment` for the environment function
+- `@mrlm/cfg/deepmerge` for the deepmerge function
+- `@mrlm/cfg/file` for the loadFiles function
+- `@mrlm/cfg/server` for the server-specific functions
 
 ## Contributing
 

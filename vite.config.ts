@@ -14,6 +14,7 @@ export default defineConfig({
         index: resolve(__dirname, "src/index.ts"),
         config: resolve(__dirname, "src/config.ts"),
         environment: resolve(__dirname, "src/environment.ts"),
+        file: resolve(__dirname, "src/file.ts"),
         merge: resolve(__dirname, "src/merge.ts"),
         server: resolve(__dirname, "src/index.server.ts"),
       },

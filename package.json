@@ -6,11 +6,23 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./environment": {
+      "import": "./dist/environment.js",
+      "types": "./dist/environment.d.ts"
+    },
+    "./deepmerge": {
+      "import": "./dist/merge.js",
+      "types": "./dist/merge.d.ts"
+    },
+    "./file": {
+      "import": "./dist/file.js",
+      "types": "./dist/file.d.ts"
+    },
     "./server": {
-      "default": "./dist/server.js",
+      "import": "./dist/server.js",
       "types": "./dist/server.d.ts"
     }
   },
