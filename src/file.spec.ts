@@ -7,7 +7,7 @@ vi.mock("fs");
 describe("loadFile", () => {
     it("should return parsed JSON data from file", () => {
         const filePath = "test.json";
-        const fileContent = "{'key': 'value'}";
+        const fileContent = "{\"key\": \"value\"}";
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
@@ -25,7 +25,7 @@ describe("loadFile", () => {
 
     it("should apply filter and return empty object if filter fails", () => {
         const filePath = "test.json";
-        const fileContent = "{'key': 'value'}";
+        const fileContent = "{\"key\": \"value\"}";
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
@@ -35,7 +35,7 @@ describe("loadFile", () => {
 
     it("should apply map function to the data", () => {
         const filePath = "test.json";
-        const fileContent = "{'key': 'value'}";
+        const fileContent = "{\"key\": \"value\"}";
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
@@ -47,7 +47,7 @@ describe("loadFile", () => {
 describe("loadMultipleFiles", () => {
     it("should return array of parsed JSON data from multiple files", () => {
         const filePaths = ["test1.json", "test2.json"];
-        const fileContents = ["{'key1': 'value1'}", "{'key2': 'value2'}"];
+        const fileContents = ["{\"key1\": \"value1\"}", "{\"key2\": \"value2\"}"];
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync")
             .mockReturnValueOnce(fileContents[0])
@@ -59,7 +59,7 @@ describe("loadMultipleFiles", () => {
 
     it("should apply filter and map functions to multiple files", () => {
         const filePaths = ["test1.json", "test2.json"];
-        const fileContents = ["{'key1': 'value1'}", "{'key2': 'value2'}"];
+        const fileContents = ["{\"key1\": \"value1\"}", "{\"key2\": \"value2\"}"];
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync")
             .mockReturnValueOnce(fileContents[0])
