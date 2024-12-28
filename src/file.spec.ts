@@ -1,76 +1,76 @@
-import { describe, it, expect, vi } from 'vitest';
-import { loadFile, loadMultipleFiles } from './file';
-import * as fs from 'fs';
+import { describe, it, expect, vi } from "vitest";
+import { load, loadMultiple } from "./file";
+import * as fs from "fs";
 
-vi.mock('fs');
+vi.mock("fs");
 
-describe('loadFile', () => {
-    it('should return parsed JSON data from file', () => {
-        const filePath = 'test.json';
-        const fileContent = '{"key": "value"}';
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'readFileSync').mockReturnValue(fileContent);
+describe("loadFile", () => {
+    it("should return parsed JSON data from file", () => {
+        const filePath = "test.json";
+        const fileContent = "{'key': 'value'}";
+        vi.spyOn(fs, "existsSync").mockReturnValue(true);
+        vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = loadFile(filePath);
-        expect(result).toEqual({ key: 'value' });
+        const result = load(filePath);
+        expect(result).toEqual({ key: "value" });
     });
 
-    it('should return empty object if file does not exist', () => {
-        const filePath = 'nonexistent.json';
-        vi.spyOn(fs, 'existsSync').mockReturnValue(false);
+    it("should return empty object if file does not exist", () => {
+        const filePath = "nonexistent.json";
+        vi.spyOn(fs, "existsSync").mockReturnValue(false);
 
-        const result = loadFile(filePath);
+        const result = load(filePath);
         expect(result).toEqual({});
     });
 
-    it('should apply filter and return empty object if filter fails', () => {
-        const filePath = 'test.json';
-        const fileContent = '{"key": "value"}';
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'readFileSync').mockReturnValue(fileContent);
+    it("should apply filter and return empty object if filter fails", () => {
+        const filePath = "test.json";
+        const fileContent = "{'key': 'value'}";
+        vi.spyOn(fs, "existsSync").mockReturnValue(true);
+        vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = loadFile(filePath, { filter: data => data.key !== 'value' });
+        const result = load(filePath, { filter: data => data.key !== "value" });
         expect(result).toEqual({});
     });
 
-    it('should apply map function to the data', () => {
-        const filePath = 'test.json';
-        const fileContent = '{"key": "value"}';
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'readFileSync').mockReturnValue(fileContent);
+    it("should apply map function to the data", () => {
+        const filePath = "test.json";
+        const fileContent = "{'key': 'value'}";
+        vi.spyOn(fs, "existsSync").mockReturnValue(true);
+        vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = loadFile(filePath, { map: data => ({ ...data, newKey: 'newValue' }) });
-        expect(result).toEqual({ key: 'value', newKey: 'newValue' });
+        const result = load(filePath, { map: data => ({ ...data, newKey: "newValue" }) });
+        expect(result).toEqual({ key: "value", newKey: "newValue" });
     });
 });
 
-describe('loadMultipleFiles', () => {
-    it('should return array of parsed JSON data from multiple files', () => {
-        const filePaths = ['test1.json', 'test2.json'];
-        const fileContents = ['{"key1": "value1"}', '{"key2": "value2"}'];
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'readFileSync')
+describe("loadMultipleFiles", () => {
+    it("should return array of parsed JSON data from multiple files", () => {
+        const filePaths = ["test1.json", "test2.json"];
+        const fileContents = ["{'key1': 'value1'}", "{'key2': 'value2'}"];
+        vi.spyOn(fs, "existsSync").mockReturnValue(true);
+        vi.spyOn(fs, "readFileSync")
             .mockReturnValueOnce(fileContents[0])
             .mockReturnValueOnce(fileContents[1]);
 
-        const result = loadMultipleFiles(filePaths);
-        expect(result).toEqual([{ key1: 'value1' }, { key2: 'value2' }]);
+        const result = loadMultiple(filePaths);
+        expect(result).toEqual([{ key1: "value1" }, { key2: "value2" }]);
     });
 
-    it('should apply filter and map functions to multiple files', () => {
-        const filePaths = ['test1.json', 'test2.json'];
-        const fileContents = ['{"key1": "value1"}', '{"key2": "value2"}'];
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'readFileSync')
+    it("should apply filter and map functions to multiple files", () => {
+        const filePaths = ["test1.json", "test2.json"];
+        const fileContents = ["{'key1': 'value1'}", "{'key2': 'value2'}"];
+        vi.spyOn(fs, "existsSync").mockReturnValue(true);
+        vi.spyOn(fs, "readFileSync")
             .mockReturnValueOnce(fileContents[0])
             .mockReturnValueOnce(fileContents[1]);
 
         const options = {
-            filter: (data: any) => data.key1 !== 'value1',
-            map: (data: any) => ({ ...data, newKey: 'newValue' })
+            filter: (data: any) => data.key1 !== "value1",
+            map: (data: any) => ({ ...data, newKey: "newValue" })
         };
 
-        const result = loadMultipleFiles(filePaths, options);
-        expect(result).toEqual([{}, { key2: 'value2', newKey: 'newValue' }]);
+        const result = loadMultiple(filePaths, options);
+        expect(result).toEqual([{}, { key2: "value2", newKey: "newValue" }]);
     });
 });

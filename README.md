@@ -98,7 +98,7 @@ console.log(merged); // Output: { a: 1, b: { c: 2, d: 3 } }
 You can map environment variables to your configuration using the `environment` function. It accepts the prefix to be stripped and optional level separator.
 
 ```shell
-// .env file contents
+# .env file contents
 PREFIX_DATABASE_HOST="env-db-host"
 PREFIX_DATABASE_PORT="env-db-port"
 PREFIX_SERVER_PORT="env-server-port"
@@ -122,16 +122,21 @@ console.log(envConfig);
 // }
 ```
 
-### LoadFiles function
+### Load function
 
-You can load configuration from files using the `loadFiles` function.
+You can load configuration from files using the `load` and `loadMultiple` functions.
 
 ```typescript
-import { loadFiles } from '@mrlm/cfg/file';
+import { load } from '@mrlm/cfg/file';
 
-const fileConfig = loadFiles(['./config/default.json', './config/production.json']);
+const file = load("config/default.json"), 
 
-console.log(fileConfig);
+const files = loadMultiple([
+  "config/default.json", 
+  "config/production.json"
+]);
+
+console.log(file, files);
 // Output will depend on the contents of your configuration files.
 ```
 

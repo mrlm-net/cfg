@@ -21,7 +21,7 @@ export function deepmerge(target: any, ...sources: any[]): any {
             continue;
         }
 
-        if (typeof target === 'object' && typeof source === 'object') {
+        if (typeof target === "object" && typeof source === "object") {
             const result: any = { ...target };
             for (const key of Object.keys(source)) {
                 if (key in target) {
