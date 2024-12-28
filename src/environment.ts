@@ -10,9 +10,9 @@ export function environment(prefix: string = '', separator: string = '_'): Recor
         for (let i = 0; i < path.length; i++) {
             const part = path[i];
             if (i === path.length - 1) {
-                current[part] = value;
+                current[part.toLowerCase()] = value;
             } else {
-                current = current[part] = current[part] || {};
+                current = current[part.toLowerCase()] = current[part.toLowerCase()] || {};
             }
         }
     }

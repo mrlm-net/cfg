@@ -95,20 +95,19 @@ console.log(merged); // Output: { a: 1, b: { c: 2, d: 3 } }
 
 ### Environment function
 
-You can map environment variables to your configuration using the `environment` function.
+You can map environment variables to your configuration using the `environment` function. It accepts the prefix to be stripped and optional level separator.
+
+```shell
+// .env file contents
+PREFIX_DATABASE_HOST="env-db-host"
+PREFIX_DATABASE_PORT="env-db-port"
+PREFIX_SERVER_PORT="env-server-port"
+```
 
 ```typescript
 import { environment } from '@mrlm/cfg/environment';
 
-const envConfig = environment({
-  database: {
-    host: 'DB_HOST',
-    port: 'DB_PORT',
-  },
-  server: {
-    port: 'SERVER_PORT',
-  },
-});
+const envConfig = environment('PREFIX_', '_');
 
 console.log(envConfig);
 // Output will depend on your environment variables, e.g.:
