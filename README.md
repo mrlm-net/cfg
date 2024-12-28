@@ -30,11 +30,11 @@ $ yarn add @mrlm/cfg
 Import the package and use it to merge configuration objects deeply.
 
 ```typescript
-import { Config } from '@mrlm/cfg';
+import { Config } from "@mrlm/cfg";
 
 const defaultConfig = {
   database: {
-    host: 'localhost',
+    host: "localhost",
     port: 5432,
   },
   server: {
@@ -44,7 +44,7 @@ const defaultConfig = {
 
 const environmentConfig = {
   database: {
-    host: 'production-db.example.com',
+    host: "production-db.example.com",
   },
   server: {
     port: 8000,
@@ -58,7 +58,7 @@ console.log(instance);
 // class Config implements IConfig {
 //   private config: {    
 //     database: {
-//       host: 'production-db.example.com',
+//       host: "production-db.example.com",
 //       port: 5432,
 //     },
 //     server: {
@@ -69,10 +69,10 @@ console.log(instance);
 
 // GET value without fallback
 console.log(instance.get("database.host")); 
-// Output: 'production-db.example.com'
+// Output: "production-db.example.com"
 // GET value with fallback
 console.log(instance.get("database.unknown", "fallback")); 
-// Output: 'fallback'
+// Output: "fallback"
 ```
 
 ## Advanced Usage
@@ -84,7 +84,7 @@ We have specific handlers for Node.js based environments to allow you easily man
 We have created our own naive implementation of deepmerge function, you can also use this package to achieve deep merge in your other apps.
 
 ```typescript
-import { deepmerge } from '@mrlm/cfg/deepmerge';
+import { deepmerge } from "@mrlm/cfg/deepmerge";
 
 const obj1 = { a: 1, b: { c: 2 } };
 const obj2 = { b: { d: 3 } };
@@ -105,19 +105,19 @@ PREFIX_SERVER_PORT="env-server-port"
 ```
 
 ```typescript
-import { environment } from '@mrlm/cfg/environment';
+import { environment } from "@mrlm/cfg/environment";
 
-const envConfig = environment('PREFIX_', '_');
+const envConfig = environment("PREFIX_", "_");
 
 console.log(envConfig);
 // Output will depend on your environment variables, e.g.:
 // {
 //   database: {
-//     host: 'env-db-host',
-//     port: 'env-db-port',
+//     host: "env-db-host",
+//     port: "env-db-port",
 //   },
 //   server: {
-//     port: 'env-server-port',
+//     port: "env-server-port",
 //   },
 // }
 ```
@@ -127,7 +127,7 @@ console.log(envConfig);
 You can load configuration from files using the `load` and `loadMultiple` functions.
 
 ```typescript
-import { load } from '@mrlm/cfg/file';
+import { load } from "@mrlm/cfg/file";
 
 const file = load("config/default.json"), 
 
