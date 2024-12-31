@@ -1,54 +1,120 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { environment } from "./environment";
 
-describe("environment function", () => {
-    it("should return an empty object if no environment variables match the prefix", () => {
-        process.env = { TEST_VAR: "^4.6.7" };
-        const result = environment("PREFIX_");
-        expect(result).toEqual({});
-    });
-
-    it("should return a flat object if no separator is found", () => {
-        process.env = { PREFIX_VAR: "value" };
-        const result = environment("PREFIX_");
-        expect(result).toEqual({ var: "value" });
-    });
-
-    it("should return a nested object based on the separator", () => {
-        process.env = { PREFIX_VAR_ONE: "value1", PREFIX_VAR_TWO: "value2" };
-        const result = environment("PREFIX_", "_");
-        expect(result).toEqual({ var: { one: "value1", two: "value2" } });
-    });
-
-    it("should handle custom separators", () => {
-        process.env = { "PREFIX_VAR-ONE": "value1", "PREFIX_VAR-TWO": "value2" };
-        const result = environment("PREFIX_", "-");
-        expect(result).toEqual({ var: { one: "value1", two: "value2" } });
-    });
-
-    it("should handle no prefix", () => {
-        process.env = { VAR_ONE: "value1", VAR_TWO: "^4.6.7" };
-        const result = environment("", "_");
-        expect(result).toEqual({ var: { one: "value1", two: "^4.6.7" } });
-    });
+// As we are testing the environment function, 
+// we need to stub the process.env object
+// to avoid side effects between tests 
+// and executor machine environment variables
+beforeEach(async () => {
+    process.env = {};
 });
 
-describe("environment function with lowerCase option", () => {
-    it("should return keys in lower case by default", () => {
-        process.env = { PREFIX_VAR_ONE: "value1", PREFIX_VAR_TWO: "value2" };
-        const result = environment("PREFIX_", "_");
-        expect(result).toEqual({ var: { one: "value1", two: "value2" } });
+describe("environment function", () => {
+    it("should create nested objects based on the path length", () => {
+        vi.stubEnv("APP_DB_HOST", "localhost");
+        vi.stubEnv("APP_DB_PORT", "5432");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["APP"]).toStrictEqual({
+            DB: {
+                HOST: "localhost",
+                PORT: "5432"
+            }
+        });
     });
 
-    it("should return keys in original case when lowerCase is false", () => {
-        process.env = { PREFIX_VAR_ONE: "value1", PREFIX_VAR_TWO: "value2" };
-        const result = environment("PREFIX_", "_", false);
-        expect(result).toEqual({ VAR: { ONE: "value1", TWO: "value2" } });
+    it("should respect the prefix option", () => {
+        vi.stubEnv("MYAPP_DB_HOST", "localhost");
+        vi.stubEnv("MYAPP_DB_PORT", "5432");
+        const result: { [key: string]: unknown } = environment({ prefix: "MYAPP_", separator: "_" });
+        expect(result["DB"]).toStrictEqual({
+            HOST: "localhost",
+            PORT: "5432"
+        });
     });
 
-    it("should handle mixed case keys when lowerCase is false", () => {
-        process.env = { PREFIX_Var_One: "value1", PREFIX_Var_Two: "value2" };
-        const result = environment("PREFIX_", "_", false);
-        expect(result).toEqual({ Var: { One: "value1", Two: "value2" } });
+    it("should handle different separators", () => {
+        vi.stubEnv("APP.DB.HOST", "localhost");
+        vi.stubEnv("APP.DB.PORT", "5432");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "." });
+        expect(result["APP"]).toStrictEqual({
+            DB: {
+                HOST: "localhost",
+                PORT: "5432"
+            }
+        });
+    });
+
+    it("should handle default prefix and default separator", () => {
+        vi.stubEnv("APP_DB_HOST", "localhost");
+        vi.stubEnv("APP_DB_PORT", "5432");
+        const result: { [key: string]: unknown } = environment();
+        expect(result["DB"]).toStrictEqual({
+            HOST: "localhost",
+            PORT: "5432"
+        });
+    });
+
+    it("should handle empty environment variables", () => {
+        vi.stubEnv("APP_DB_HOST", "");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["APP"]).toStrictEqual({
+            DB: {
+                HOST: ""
+            }
+        });
+    });
+
+    it("should handle environment variables with no separator", () => {
+        vi.stubEnv("APPDBHOST", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "APP", separator: "_" });
+        expect(result["DBHOST"]).toBe("localhost");
+    });
+
+    it("should handle environment variables with multiple separators", () => {
+        vi.stubEnv("APP_DB__HOST", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["APP"]).toStrictEqual({
+            DB: {
+                "": {
+                    HOST: "localhost"
+                }
+            }
+        });
+    });
+
+    it("should handle environment variables with numeric keys", () => {
+        vi.stubEnv("APP_DB_1_HOST", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["APP"]).toStrictEqual({
+            DB: {
+                "1": {
+                    HOST: "localhost"
+                }
+            }
+        });
+    });
+
+    it("should handle environment variables with special characters", () => {
+        vi.stubEnv("APP_DB_HO$T", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["APP"]).toEqual({
+            DB: {
+                "HO$T": "localhost"
+            }
+        });
+    });
+
+    it("should handle environment variables with empty prefix", () => {
+        vi.stubEnv("DB_HOST", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "", separator: "_" });
+        expect(result["DB"]).toStrictEqual({
+            HOST: "localhost"
+        });
+    });
+
+    it("should handle environment variables with empty separator", () => {
+        vi.stubEnv("APPDBHOST", "localhost");
+        const result: { [key: string]: unknown } = environment({ prefix: "APP", separator: "" });
+        expect(result["DBHOST"]).toEqual("localhost");
     });
 });
