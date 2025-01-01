@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { load, loadMultiple } from "./file";
+import { file, files } from "./file";
 import * as fs from "fs";
 
 vi.mock("fs");
@@ -11,7 +11,7 @@ describe("loadFile", () => {
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = load(filePath);
+        const result = file(filePath);
         expect(result).toEqual({ key: "value" });
     });
 
@@ -19,7 +19,7 @@ describe("loadFile", () => {
         const filePath = "nonexistent.json";
         vi.spyOn(fs, "existsSync").mockReturnValue(false);
 
-        const result = load(filePath);
+        const result = file(filePath);
         expect(result).toEqual({});
     });
 
@@ -29,7 +29,7 @@ describe("loadFile", () => {
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = load(filePath, { filter: data => data.key !== "value" });
+        const result = file(filePath, { filter: data => data.key !== "value" });
         expect(result).toEqual({});
     });
 
@@ -39,7 +39,7 @@ describe("loadFile", () => {
         vi.spyOn(fs, "existsSync").mockReturnValue(true);
         vi.spyOn(fs, "readFileSync").mockReturnValue(fileContent);
 
-        const result = load(filePath, { map: data => ({ ...data, newKey: "newValue" }) });
+        const result = file(filePath, { map: data => ({ ...data, newKey: "newValue" }) });
         expect(result).toEqual({ key: "value", newKey: "newValue" });
     });
 });
@@ -53,7 +53,7 @@ describe("loadMultipleFiles", () => {
             .mockReturnValueOnce(fileContents[0])
             .mockReturnValueOnce(fileContents[1]);
 
-        const result = loadMultiple(filePaths);
+        const result = files(filePaths);
         expect(result).toEqual([{ key1: "value1" }, { key2: "value2" }]);
     });
 
@@ -70,7 +70,7 @@ describe("loadMultipleFiles", () => {
             map: (data: any) => ({ ...data, newKey: "newValue" })
         };
 
-        const result = loadMultiple(filePaths, options);
+        const result = files(filePaths, options);
         expect(result).toEqual([{}, { key2: "value2", newKey: "newValue" }]);
     });
 });

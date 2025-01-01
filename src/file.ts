@@ -5,7 +5,7 @@ interface LoadOptions {
     map?: (data: any) => any;
 }
 
-export function load(filePath: string, options?: LoadOptions): any {
+export function file(filePath: string, options?: LoadOptions): any {
     if (!fs.existsSync(filePath)) {
         return {};
     }
@@ -20,6 +20,6 @@ export function load(filePath: string, options?: LoadOptions): any {
     return data;
 }
 
-export function loadMultiple(filePaths: string[], options?: LoadOptions): any[] {
-    return filePaths.map(filePath => load(filePath, options));
+export function files(filePaths: string[], options?: LoadOptions): any[] {
+    return filePaths.map(filePath => file(filePath, options));
 }

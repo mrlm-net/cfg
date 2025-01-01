@@ -124,19 +124,19 @@ console.log(envConfig);
 
 ### Load function
 
-You can load configuration from files using the `load` and `loadMultiple` functions.
+You can load configuration from files using the `file` and `files` functions.
 
 ```typescript
-import { load } from "@mrlm/cfg/file";
+import { file, files } from "@mrlm/cfg/file";
 
-const file = load("config/default.json"), 
+const single = file("config/default.json"), 
 
-const files = loadMultiple([
+const multiple = files([
   "config/default.json", 
   "config/production.json"
 ]);
 
-console.log(file, files);
+console.log(single, multiple);
 // Output will depend on the contents of your configuration files.
 ```
 
