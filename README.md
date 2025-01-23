@@ -147,14 +147,14 @@ The following export paths are available based on the `package.json`:
 - `@mrlm/cfg` for the main package
 - `@mrlm/cfg/environment` for the environment function
 - `@mrlm/cfg/deepmerge` for the deepmerge function
-- `@mrlm/cfg/file` for the loadFiles function
+- `@mrlm/cfg/file` for the load file(s) function
 - `@mrlm/cfg/server` for the server-specific functions
 
 ## Contributing
 
-_Contributions are welcomed and must follow [Code of Conduct](https://github.com/mrlm-net/logz?tab=coc-ov-file) and common [Contributions guidelines](https://github.com/mrlm-net/.github/blob/main/docs/CONTRIBUTING.md)._
+_Contributions are welcomed and must follow [Code of Conduct](https://github.com/mrlm-net/cfg?tab=coc-ov-file) and common [Contributions guidelines](https://github.com/mrlm-net/.github/blob/main/docs/CONTRIBUTING.md)._
 
-> If you'd like to report security issue please follow [security guidelines](https://github.com/mrlm-net/logz?tab=security-ov-file).
+> If you'd like to report security issue please follow [security guidelines](https://github.com/mrlm-net/cfg?tab=security-ov-file).
 
 ---
 <sup><sub>_All rights reserved &copy; Martin Hrášek [<@marley-ma>](https://github.com/marley-ma) and WANTED.solutions s.r.o. [<@wanted-solutions>](https://github.com/wanted-solutions)_</sub></sup>
